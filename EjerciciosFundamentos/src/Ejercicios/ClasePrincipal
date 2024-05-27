@@ -1,0 +1,11 @@
+PASO 4 CLASE PRINCIPAL 
+
+// Principal.java
+public class Principal {
+    public static void main(String[] args) {
+        Biblioteca biblioteca = new Biblioteca();
+        BibliotecaVista vista = new BibliotecaVista();
+        BibliotecaControlador controlador = new BibliotecaControlador(biblioteca, vista);
+        controlador.iniciar();
+    }
+}
