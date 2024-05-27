@@ -1,1 +1,120 @@
+package ejerclases;
 
+	import java.util.Random;
+
+	public class Sudoku {
+
+	    public static void main(String[] args) {
+	        int[][] tablero = generarTablero(9, 9, 20);
+	        imprimirTablero(tablero);
+	        System.out.println("----- Tablero Resuelto -----");
+	        resolverSudoku(tablero);
+	        imprimirTablero(tablero);
+	    }
+
+	    public static int[][] generarTablero(int filas, int columnas, int numeros) {
+	        int[][] tablero = new int[filas][columnas];
+	        Random leer = new Random();
+	        int numerosColocados = 0;
+
+	        while (numerosColocados < numeros) {
+	            int fila = leer.nextInt(filas);
+	            int columna = leer.nextInt(columnas);
+	            int numero = leer.nextInt(9) + 1;
+
+	            if (tablero[fila][columna] == 0 && !existeEnFila(tablero, fila, numero) && !existeEnColumna(tablero, columna, numero) && !existeEnMatriz(tablero, fila, columna, numero)) {
+	                tablero[fila][columna] = numero;
+	                numerosColocados++;
+	            }
+	        }
+
+	        return tablero;
+	    }
+
+	    public static boolean existeEnFila(int[][] tablero, int fila, int numero) {
+	        for (int columna = 0; columna < tablero[fila].length; columna++) {
+	            if (tablero[fila][columna] == numero) {
+	                return true;
+	            }
+	        }
+	        return false;
+	    }
+
+	    public static boolean existeEnColumna(int[][] tablero, int columna, int numero) {
+	        for (int fila = 0; fila < tablero.length; fila++) {
+	            if (tablero[fila][columna] == numero) {
+	                return true;
+	            }
+	        }
+	        return false;
+	    }
+
+	    public static boolean existeEnMatriz(int[][] tablero, int fila, int columna, int numero) {
+	        int inicioFila = fila - fila % 3;
+	        int inicioColumna = columna - columna % 3;
+	        for (int i = inicioFila; i < inicioFila + 3; i++) {
+	            for (int j = inicioColumna; j < inicioColumna + 3; j++) {
+	                if (tablero[i][j] == numero) {
+	                    return true;
+	                }
+	            }
+	        }
+	        return false;
+	    }
+
+	    public static boolean resolverSudoku(int[][] tablero) {
+	        int[] posicion = buscarCeldaVacia(tablero);
+	        if (posicion == null) {
+	            return true; 
+	        }
+	        int fila = posicion[0];
+	        int columna = posicion[1];
+
+	        for (int numero = 1; numero <= 9; numero++) {
+	            if (esValido(tablero, fila, columna, numero)) {
+	                tablero[fila][columna] = numero;
+
+	                if (resolverSudoku(tablero)) {
+	                    return true;
+	                }
+
+	                tablero[fila][columna] = 0; 
+	            }
+	        }
+	        return false;
+	    }
+
+	    public static int[] buscarCeldaVacia(int[][] tablero) {
+	        int[] posicion = new int[2];
+	        for (int i = 0; i < tablero.length; i++) {
+	            for (int j = 0; j < tablero[i].length; j++) {
+	                if (tablero[i][j] == 0) {
+	                    posicion[0] = i;
+	                    posicion[1] = j;
+	                    return posicion;
+	                }
+	            }
+	        }
+	        return null;
+	    }
+
+	    public static boolean esValido(int[][] tablero, int fila, int columna, int numero) {
+	        return !existeEnFila(tablero, fila, numero) && !existeEnColumna(tablero, columna, numero) && !existeEnMatriz(tablero, fila, columna, numero);
+	    }
+
+	    public static void imprimirTablero(int[][] tablero) {
+	        System.out.println("-----Tablero------");
+	        for (int i = 0; i < tablero.length; i++) {
+	            if (i % 3 == 0 && i != 0) {
+	                System.out.println("-------------------");
+	            }
+	            for (int j = 0; j < tablero[0].length; j++) {
+	                if (j % 3 == 0 && j != 0) {
+	                    System.out.print("| ");
+	                }
+	                System.out.print(tablero[i][j] + " ");
+	            }
+	            System.out.println();
+	        }
+	    }
+	}
