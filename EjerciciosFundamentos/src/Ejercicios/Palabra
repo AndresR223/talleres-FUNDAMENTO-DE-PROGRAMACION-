@@ -1,0 +1,55 @@
+package palabra;
+import  java.util.Scanner;
+
+public class Palabra {
+
+  private String palabraSecreta;
+    private StringBuilder letrasAdivinadas;
+
+    public Palabra(String palabraSecreta) {
+        this.palabraSecreta = palabraSecreta;
+        letrasAdivinadas = new StringBuilder("_".repeat(palabraSecreta.length()));
+    }
+
+    public String mostrarPalabra() {
+        return letrasAdivinadas.toString();
+    }
+
+    public void intentar(char letra) {
+        for (int i = 0; i < palabraSecreta.length(); i++) {
+            if (palabraSecreta.charAt(i) == letra) {
+                letrasAdivinadas.setCharAt(i, letra);
+            }
+        }
+    }
+
+    public boolean GameOver() {
+        return !letrasAdivinadas.toString().contains("_");
+    }
+
+    public boolean gano() {
+        return letrasAdivinadas.toString().equals(palabraSecreta);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String[] palabras = {"perro", "mariposa", "carro", "poster", "camion"};
+        String elegirPalabra = palabras[(int) (Math.random() * palabras.length)];
+        Palabra juego = new Palabra(elegirPalabra);
+
+        while (!juego.GameOver()) {
+            System.out.println("Palabra: " + juego.mostrarPalabra());
+            System.out.println("Letras adivinadas: " + juego.letrasAdivinadas);
+            System.out.print("Ingresa la letra: ");
+            char letra = scanner.nextLine().charAt(0);
+            juego.intentar(letra);
+        }
+
+        if (juego.gano()) {
+            System.out.println("¡Ganaste! La palabra era: " + elegirPalabra);
+        } else {
+            System.out.println("¡Perdiste! La palabra secreta era: " + elegirPalabra);
+        }
+    }
+                
+            }
